@@ -1,8 +1,5 @@
 ﻿namespace Client.Net.Security
 {
-    /// <summary>
-    /// Client's public key is shared and checked against server private key and visa versa to decrypt messages
-    /// </summary>
     public static class Encryption
     {
         private static string privateKey;
