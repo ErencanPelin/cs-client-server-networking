@@ -16,6 +16,7 @@ namespace Client.Net
         public event Action onClientFailedToConnect; //invoked when the user fails to join the server
         public event Action onClientKicked; //invoked when the user is removed from the connection, or the server is shut down
         public event Action<string> onMessageSendFailed; //invoked when a message fails to reach the server
+        
         public Server()
         {
             client = new TcpClient();
@@ -74,7 +75,8 @@ namespace Client.Net
                                 Console.WriteLine("");
                                 break;
                         }
-                    } catch (System.IO.IOException e)
+                    } 
+                    catch (System.IO.IOException e)
                     {
                         onClientKicked.Invoke();
                         return;

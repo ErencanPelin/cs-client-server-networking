@@ -2,6 +2,7 @@
 
 namespace Client.Net.Security
 {
+    //each client should have their own key exchange object
     //keys should be exchanged over port 443 (TLS) Transport layer security to ensure secure key transmission
     //once keys are verified, once keys are agreed upon, the program can encrypt data using the relevant public/private symmetric keys
     //using the AES encryption algorithm so that all data sent between clients and the server is completely encrypted
