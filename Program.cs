@@ -1,4 +1,5 @@
 ﻿using Server.Net.IO;
+using Server.Net.Security;
 using System.Net;
 using System.Net.Sockets;
 
@@ -8,6 +9,7 @@ namespace Server
     {
         static TcpListener _tcpListener;
         static List<Client> users;
+        static KeyExchange keyExchange;
 
         static event Action<Client> onClientConnect; //invoked whenever a new client is connected
         static event Action<Client> onClientDisconnect; //invoked whenever a client disconnects
@@ -21,6 +23,8 @@ namespace Server
             onClientConnect += OnClientConnect;
             onClientDisconnect += OnClientDisconnect;
             onMessageReceived += OnMessageReceived;
+
+            Start();
 
             //start listening
             Log("Server has started on 127.0.0.1:5430.\nWaiting for a connection. . .\n");
@@ -36,6 +40,13 @@ namespace Server
         {
             Console.Title = "Server";
             users = new List<Client>();
+
+            keyExchange = new KeyExchange(); //create a new pair of public/private keys for this session
+        }
+
+        //open client/server port
+        private static void Start()
+        {
             _tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 5430); //start listening on port 5430
             _tcpListener.Start();
         }

@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography.X509Certificates;
 using Server.Net.IO;
 
 namespace Server
@@ -9,8 +10,9 @@ namespace Server
         public string Username { get; set; }
         public Guid GUID { get; set; }
         public TcpClient client { get; set; }
-
+        
         private PacketReader packetReader;
+        private byte[] clientPublicKey; //used to encrypt this clients data before its sent to them
 
         public Client(TcpClient client)
         {

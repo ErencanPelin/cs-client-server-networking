@@ -25,28 +25,5 @@ namespace Server.Net.Security
             PublicKey = server.PublicKey.ToByteArray();
             PrivateKey = server.Key.Export(CngKeyBlobFormat.EccPrivateBlob);
         }
-
-        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-        public byte[] CalculateSharedSecretKey(byte[] receivedPublicKey)
-        {
-            // create a new ECDiffieHellmanCng object to import the received public key
-            using (ECDiffieHellmanCng bobExchange = new(CngKey.Import(receivedPublicKey, CngKeyBlobFormat.EccPublicBlob)))
-            {
-                // calculate the shared secret key
-                return bobExchange.DeriveKeyMaterial(CngKey.Import(receivedPublicKey, CngKeyBlobFormat.EccPublicBlob));
-            }
-        }
-
-        [SuppressMessage("Style", "IDE0063:Use simple 'using' statement", Justification = "<Pending>")]
-        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-        public bool VerifyData(byte[] data, byte[] signature, byte[] receivedPublicKey)
-        {
-            // create a new ECDsaCng object
-            using (ECDsaCng bobVerifier = new(CngKey.Import(receivedPublicKey, CngKeyBlobFormat.EccPublicBlob)))
-            {
-                // verify the signature
-                return bobVerifier.VerifyData(data, signature);
-            }
-        }
     }
 }
