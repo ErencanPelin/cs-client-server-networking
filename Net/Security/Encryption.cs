@@ -2,12 +2,12 @@
 {
     public static class Encryption
     {
-        public static string Encrypt(byte[] key, string text)
+        public static string Encrypt(byte[] serverPublickey, string text)
         {
             throw new System.NotImplementedException();
         }
 
-        public static string Decrypt(byte[] key, string cipherText) 
+        public static string Decrypt(byte[] clientPrivateKey, string cipherText) 
         {
             throw new System.NotImplementedException();
         }

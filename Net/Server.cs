@@ -1,12 +1,17 @@
 ﻿using Client.Net.IO;
+using Client.Net.Security;
 using System;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Client.Net
 {
     public class Server
     {
+        private byte[] serverPublicKey; //used to encrypt data before its sent to the server
+        private KeyExchange keyExchange; //creates and stores our client's private/public keys
+
         private TcpClient client;
         public PacketReader packetReader;
 
@@ -20,6 +25,7 @@ namespace Client.Net
         public Server()
         {
             client = new TcpClient();
+            keyExchange = new KeyExchange(); //create a new key pair for this session
         }
 
         public void ConnectToServer(string username)
@@ -71,6 +77,14 @@ namespace Client.Net
                             case 10:
                                 onClientDisconnect?.Invoke();
                                 break;
+                            case 2:
+                                /*we are receiving the server's public key, 
+                                 * we should process this separately and 
+                                 * save their public key somewhere so we can enrypt 
+                                 * our messages to them later
+                                */
+                                RecieveKey();
+                                break;
                             default:
                                 Console.WriteLine("");
                                 break;
@@ -99,6 +113,14 @@ namespace Client.Net
                 onMessageSendFailed?.Invoke(message);
                 return;
             }
+        }
+
+        private void RecieveKey()
+        {
+            var msg = packetReader.ReadMessage();
+            serverPublicKey = Encoding.ASCII.GetBytes(msg);
+            //FOR TESTING ONLY REMOVE THIS LINE IN CODE
+            Console.WriteLine($"Client recevied server key: {serverPublicKey}");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Security.Cryptography;
 
 namespace Client.Net.Security
 {
@@ -9,8 +10,12 @@ namespace Client.Net.Security
     public class KeyExchange
     {
         private ECDiffieHellmanCng client;
-        public byte[] PublicKey { get; private set; }
-        public byte[] PrivateKey { get; private set; }
+        public byte[] PublicKey { get; private set; } //given to the server who uses it to encrypt messages for this client
+        public byte[] PrivateKey { get; private set; } //used to decrypt messages sent by the server - remember the server uses this clients public key to encrypt messages
+
+        /*attackers or man-in-the-middle attacks may be able to gain access to the message, but because they lack the corresponding private
+        *key, they won't be able to decrypt and steal the message contents - keeping confidentiality under CIA
+        */
 
         public KeyExchange()
         {
@@ -20,28 +25,11 @@ namespace Client.Net.Security
             client.HashAlgorithm = CngAlgorithm.Sha256;
 
             // generate the public and private keys
-            PublicKey = client.PublicKey.ToByteArray();
+            PublicKey = client.PublicKey.ToByteArray(); //stored as a byte array to easier transmission
             PrivateKey = client.Key.Export(CngKeyBlobFormat.EccPrivateBlob);
-        }
 
-        public byte[] SignData(byte[] data)
-        {
-            // create a new ECDsaCng object
-            using (ECDsaCng aliceSigner = new ECDsaCng(CngKey.Import(PrivateKey, CngKeyBlobFormat.EccPrivateBlob)))
-            {
-                // sign the data using ECDSA
-                return aliceSigner.SignData(data);
-            }
-        }
-
-        public byte[] CalculateSharedSecretKey(byte[] receivedPublicKey)
-        {
-            // create a new ECDiffieHellmanCng object to import the received public key
-            using (ECDiffieHellmanCng bobExchange = new(CngKey.Import(receivedPublicKey, CngKeyBlobFormat.EccPublicBlob)))
-            {
-                // calculate the shared secret key
-                return bobExchange.DeriveKeyMaterial(CngKey.Import(receivedPublicKey, CngKeyBlobFormat.EccPublicBlob));
-            }
+            //FOR TESTING ONLY REMOVE THIS LINE IN PRODUCTION:
+            Console.WriteLine($"Client keys: {PublicKey}");
         }
     }
 }
