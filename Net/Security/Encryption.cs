@@ -2,15 +2,12 @@
 {
     public static class Encryption
     {
-        private static string privateKey;
-        private static string publicKey;
-
-        public static string Encrypt(string text)
+        public static string Encrypt(byte[] key, string text)
         {
             throw new NotImplementedException();
         }
 
-        public static string Decrypt(string cipherText) 
+        public static string Decrypt(byte[] key, string cipherText) 
         {
             throw new NotImplementedException();
         }
