@@ -13,11 +13,12 @@ namespace Client.Net.Security
         //to decrypt the rest of the message.
         //The key will be the public key of the server and which will be obtained when the client first connects to the server
         //this ensure a unique IV for every message sent.
-        public static string EncryptDataWithAes(string plainText, byte[] key = default)
+        public static string EncryptDataWithAes(string plainText, out byte[] IV, byte[] key = default)
         {
             using Aes aesAlgorithm = Aes.Create();
             aesAlgorithm.Key = Encoding.ASCII.GetBytes("b14ca5898a4e4133bbce2ea2315a1916");
-            aesAlgorithm.IV = new byte[16];
+            aesAlgorithm.GenerateIV(); //create a new IV for this packet/message
+            IV = aesAlgorithm.IV; //pass it out the function so we can attach it to the messagw
 
             // Create encryptor object
             ICryptoTransform encryptor = aesAlgorithm.CreateEncryptor();
@@ -38,12 +39,12 @@ namespace Client.Net.Security
             return Convert.ToBase64String(encryptedData);
         }
 
-        public static string DecryptDataWithAes(string cipherText, byte[] key = default)
+        public static string DecryptDataWithAes(string cipherText, byte[] IV, byte[] key = default)
         {
             using Aes aesAlgorithm = Aes.Create();
-            //this implementation is subject to change when the key exchange algorithm is complete
-            aesAlgorithm.Key = Encoding.ASCII.GetBytes("b14ca5898a4e4133bbce2ea2315a1916"); //Convert.FromBase64String(key);
-            aesAlgorithm.IV = new byte[16]; //Convert.FromBase64String(iv);
+            aesAlgorithm.Key = Encoding.ASCII.GetBytes("b14ca5898a4e4133bbce2ea2315a1916");
+            Console.WriteLine(Encoding.ASCII.GetString(IV));
+            aesAlgorithm.IV = IV;
 
             // Create decryptor object
             ICryptoTransform decryptor = aesAlgorithm.CreateDecryptor();

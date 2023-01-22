@@ -16,11 +16,14 @@ namespace Client.Net.IO
 
         public string ReadMessage()
         {
-            var length = ReadInt32(); //create a suitable buffer
-            byte[] buffer = new byte[length];
-            ns.Read(buffer, 0, length); //read the bytes
+            var length = ReadInt32(); //read the length from the start of the packet
+            byte[] iv = new byte[16]; //create buffer to store the IV
+            byte[] buffer = new byte[length]; //create a suitable buffer
+            ns.Read(iv, 0, 16); //read bytes for the IV - IV is 16 bytes long
+            var IV = iv;
+            ns.Read(buffer, 0, length); //read the bytes for the message
             var cipherText = Encoding.ASCII.GetString(buffer); //read the string from the buffer
-            var plainText = Encryption.DecryptDataWithAes(cipherText); //decrypt the data
+            var plainText = Encryption.DecryptDataWithAes(cipherText, IV); //decrypt the data
             return plainText; //output plain text data
         }
     }
