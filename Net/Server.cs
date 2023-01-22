@@ -45,12 +45,7 @@ namespace Client.Net
                 packetReader = new PacketReader(client.GetStream());
 
                 if (!string.IsNullOrEmpty(username))
-                {
-                    var connectPkt = new PacketBuilder();
-                    connectPkt.SetOpCode(0); //create our packet, and send it off to the server
-                    connectPkt.WriteMessage(username);
-                    client.Client.Send(connectPkt.GetPacketBytes());
-                }
+                    SendMessageToServer(0, username); //create our packet, and send it off to the server
 
                 ReadPackets();
             }
@@ -99,29 +94,21 @@ namespace Client.Net
             });
         }
 
-        public void SendMessageToServer(string message)
+        public void SendMessageToServer(byte opCode, params string[] messages)
         {
             var packet = new PacketBuilder();
-            packet.SetOpCode(5);
-            packet.WriteMessage(message);
+            packet.SetOpCode(opCode);
+            foreach (var message in messages)
+                packet.WriteMessage(message);
             try
             {
                 client.Client.Send(packet.GetPacketBytes());
             }
             catch (SocketException e)
             {
-                onMessageSendFailed?.Invoke(message);
+                onMessageSendFailed?.Invoke(messages[0]);
                 return;
             }
-        }
-
-        //Send our public key to the server and prompt the server to send us their public key for message encryption
-        private void SendKeyToServer()
-        {
-            var packet = new PacketBuilder();
-            packet.SetOpCode(2); //opCode 2 for key transmission
-            packet.WriteMessage(Encoding.ASCII.GetString(keyExchange.PublicKey)); //send our public key
-            packet.WriteMessage(Encoding.ASCII.GetString(keyExchange.PublicKey)); //send our signature
         }
 
         private void RecieveKey()

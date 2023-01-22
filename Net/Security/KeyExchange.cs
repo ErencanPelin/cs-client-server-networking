@@ -1,5 +1,5 @@
-﻿using System.Security.Cryptography;
-using System;
+﻿using System;
+using System.Security.Cryptography;
 
 namespace Client.Net.Security
 {

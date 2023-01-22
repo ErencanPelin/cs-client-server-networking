@@ -48,7 +48,7 @@ namespace Client.ViewModel
             server.onMessageSendFailed += OnMessageSendFailed;
 
             ConnectCommand = new RelayCommand(o => server.ConnectToServer(Username!.Trim().Trim()), o => !string.IsNullOrEmpty(Username));
-            SendCommand = new RelayCommand(o => { server.SendMessageToServer(Message.Trim()); Message = ""; }, o => !string.IsNullOrEmpty(Message));
+            SendCommand = new RelayCommand(o => { server.SendMessageToServer(opCode: 5, Message.Trim()); Message = ""; }, o => !string.IsNullOrEmpty(Message));
         }
 
         protected void OnPropertyChanged([CallerMemberName] string name = null) =>
