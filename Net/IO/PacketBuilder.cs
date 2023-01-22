@@ -16,10 +16,10 @@ namespace Server.Net.IO
 
         public void WriteMessage(string message)
         {
-            
             //default method
-            ms.Write(BitConverter.GetBytes(message.Length));
-            ms.Write(Encoding.ASCII.GetBytes(message));
+            var cipherText = Encryption.EncryptDataWithAes(message); //encrypt message
+            ms.Write(BitConverter.GetBytes(cipherText.Length));
+            ms.Write(Encoding.ASCII.GetBytes(cipherText));
 
             //with encryption:
            // var cipherText = Encryption.EncryptDataWithAes(message, new byte[] {0, 0, 0}, out var iv);

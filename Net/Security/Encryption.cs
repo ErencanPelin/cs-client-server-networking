@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using System.Text;
 
 namespace Server.Net.Security
 {
@@ -10,13 +11,11 @@ namespace Server.Net.Security
         //to decrypt the rest of the message.
         //The key will be the public key of the server and which will be obtained when the client first connects to the server
         //this ensure a unique IV for every message sent.
-        public static string EncryptDataWithAes(string plainText, byte[] key, out string iv)
+        public static string EncryptDataWithAes(string plainText, byte[] key = default)
         {
             using Aes aesAlgorithm = Aes.Create();
-            aesAlgorithm.Key = key;
-            //this implementation will change when paired with the key exchange algorithm
-         //   key = Convert.ToBase64String(aesAlgorithm.Key);
-            iv = Convert.ToBase64String(aesAlgorithm.IV);
+            aesAlgorithm.Key = Encoding.ASCII.GetBytes("b14ca5898a4e4133bbce2ea2315a1916");
+            aesAlgorithm.IV = new byte[16];
 
             // Create encryptor object
             ICryptoTransform encryptor = aesAlgorithm.CreateEncryptor();
@@ -37,12 +36,12 @@ namespace Server.Net.Security
             return Convert.ToBase64String(encryptedData);
         }
 
-        public static string DecryptDataWithAes(string cipherText, string key, string iv)
+        public static string DecryptDataWithAes(string cipherText, byte[] key = default)
         {
             using Aes aesAlgorithm = Aes.Create();
             //this implementation is subject to change when the key exchange algorithm is complete
-            aesAlgorithm.Key = Convert.FromBase64String(key);
-            aesAlgorithm.IV = Convert.FromBase64String(iv);
+            aesAlgorithm.Key = Encoding.ASCII.GetBytes("b14ca5898a4e4133bbce2ea2315a1916"); //Convert.FromBase64String(key);
+            aesAlgorithm.IV = new byte[16]; //Convert.FromBase64String(iv);
 
             // Create decryptor object
             ICryptoTransform decryptor = aesAlgorithm.CreateDecryptor();
