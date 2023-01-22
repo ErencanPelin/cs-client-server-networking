@@ -1,4 +1,4 @@
-﻿using System;
+﻿using OpenSSL;
 using System.Security.Cryptography;
 
 namespace Client.Net.Security
@@ -27,9 +27,15 @@ namespace Client.Net.Security
             // generate the public and private keys
             PublicKey = client.PublicKey.ToByteArray(); //stored as a byte array to easier transmission
             PrivateKey = client.Key.Export(CngKeyBlobFormat.EccPrivateBlob);
+        }
 
-            //FOR TESTING ONLY REMOVE THIS LINE IN PRODUCTION:
-            Console.WriteLine($"Client keys: {PublicKey}");
+        public byte[] SignPublicKey(byte[] publicKey)
+        {
+            // create a new RSA private key object
+            RSA rsa = RSA.FromPrivateKey(PrivateKey);
+
+            // sign the public key
+            return rsa.Sign(publicKey, Const.NID_sha256);
         }
     }
 }

@@ -115,6 +115,14 @@ namespace Client.Net
             }
         }
 
+        //Send our public key to the server and prompt the server to send us their public key for message encryption
+        private void SendKeyToServer()
+        {
+            var packet = new PacketBuilder();
+            packet.SetOpCode(2); //opCode 2 for key transmission
+            packet.WriteMessage(Encoding.ASCII.GetString(keyExchange.PublicKey)); //write 
+        }
+
         private void RecieveKey()
         {
             var msg = packetReader.ReadMessage();
