@@ -18,17 +18,16 @@ namespace Client.Net.IO
 
         public void WriteMessage(string message)
         {
-
             //default method
-            ms.Write(BitConverter.GetBytes(message.Length));
-            ms.Write(Encoding.ASCII.GetBytes(message));
+            var cipherText = Encryption.EncryptDataWithAes(message); //encrypt message
+            ms.Write(BitConverter.GetBytes(cipherText.Length));
+            ms.Write(Encoding.ASCII.GetBytes(cipherText));
 
             //with encryption:
-            // var cipherText = Encryption.EncryptDataWithAes(message, new byte[] { 0, 0, 0 }, out var iv);
+            // var cipherText = Encryption.EncryptDataWithAes(message, new byte[] {0, 0, 0}, out var iv);
             // ms.Write(Encoding.ASCII.GetBytes(iv)); //first write the IV
-            // ms.Write(BitConverter.GetBytes(cipherText.Length));
+            // ms.Write(BitConverter.GetBytes(cipherText.Length)); //write the encrypted length of the original message
             // ms.Write(Encoding.ASCII.GetBytes(cipherText)); //write the encrypted version of the original message
-
         }
 
         public byte[] GetPacketBytes() => ms.ToArray();

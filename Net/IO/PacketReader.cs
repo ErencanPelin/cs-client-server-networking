@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Client.Net.Security;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
 
@@ -18,8 +19,9 @@ namespace Client.Net.IO
             var length = ReadInt32(); //create a suitable buffer
             byte[] buffer = new byte[length];
             ns.Read(buffer, 0, length); //read the bytes
-
-            return Encoding.ASCII.GetString(buffer); //convert the bytes back into a string and return it
+            var cipherText = Encoding.ASCII.GetString(buffer); //read the string from the buffer
+            var plainText = Encryption.DecryptDataWithAes(cipherText); //decrypt the data
+            return plainText; //output plain text data
         }
     }
 }
