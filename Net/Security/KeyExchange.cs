@@ -1,5 +1,5 @@
-﻿using OpenSSL;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
+using System;
 
 namespace Client.Net.Security
 {
@@ -20,9 +20,11 @@ namespace Client.Net.Security
         public KeyExchange()
         {
             // create a new ECDiffieHellmanCng object
-            client = new ECDiffieHellmanCng();
-            client.KeyDerivationFunction = ECDiffieHellmanKeyDerivationFunction.Hash;
-            client.HashAlgorithm = CngAlgorithm.Sha256;
+            client = new()
+            {
+                KeyDerivationFunction = ECDiffieHellmanKeyDerivationFunction.Hash,
+                HashAlgorithm = CngAlgorithm.Sha256
+            };
 
             // generate the public and private keys
             PublicKey = client.PublicKey.ToByteArray(); //stored as a byte array to easier transmission
@@ -31,11 +33,12 @@ namespace Client.Net.Security
 
         public byte[] SignPublicKey(byte[] publicKey)
         {
-            // create a new RSA private key object
-            RSA rsa = RSA.FromPrivateKey(PrivateKey);
+            throw new NotImplementedException();
+        }
 
-            // sign the public key
-            return rsa.Sign(publicKey, Const.NID_sha256);
+        public bool VerifySignature(byte[] signature)
+        {
+            throw new NotImplementedException();
         }
     }
 }

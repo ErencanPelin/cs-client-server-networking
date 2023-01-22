@@ -120,7 +120,8 @@ namespace Client.Net
         {
             var packet = new PacketBuilder();
             packet.SetOpCode(2); //opCode 2 for key transmission
-            packet.WriteMessage(Encoding.ASCII.GetString(keyExchange.PublicKey)); //write 
+            packet.WriteMessage(Encoding.ASCII.GetString(keyExchange.PublicKey)); //send our public key
+            packet.WriteMessage(Encoding.ASCII.GetString(keyExchange.PublicKey)); //send our signature
         }
 
         private void RecieveKey()
