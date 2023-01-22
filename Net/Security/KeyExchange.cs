@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Server.Net.Security
 {
@@ -15,7 +14,7 @@ namespace Server.Net.Security
         public KeyExchange()
         {
             // create a new ECDiffieHellmanCng object
-            server = new ECDiffieHellmanCng
+            server = new()
             {
                 KeyDerivationFunction = ECDiffieHellmanKeyDerivationFunction.Hash,
                 HashAlgorithm = CngAlgorithm.Sha256
@@ -24,6 +23,16 @@ namespace Server.Net.Security
             // generate the public and private keys
             PublicKey = server.PublicKey.ToByteArray();
             PrivateKey = server.Key.Export(CngKeyBlobFormat.EccPrivateBlob);
+        }
+
+        public byte[] SignPublicKey(byte[] publicKey)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool VerifySignature(byte[] signature)
+        {
+            throw new NotImplementedException();
         }
     }
 }
