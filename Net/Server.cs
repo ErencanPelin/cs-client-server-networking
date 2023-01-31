@@ -35,6 +35,7 @@ namespace Client.Net
                 try
                 {
                     client.Connect("127.0.0.1", 5430);
+                    //begin key exchange
                 }
                 catch (SocketException e)
                 {
