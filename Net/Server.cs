@@ -10,7 +10,6 @@ namespace Client.Net
     public class Server
     {
         private byte[] serverPublicKey; //used to encrypt data before its sent to the server
-        private KeyExchange keyExchange; //creates and stores our client's private/public keys
 
         private TcpClient client;
         public PacketReader packetReader;
@@ -25,7 +24,6 @@ namespace Client.Net
         public Server()
         {
             client = new TcpClient();
-            keyExchange = new KeyExchange(); //create a new key pair for this session
         }
 
         public void ConnectToServer(string username)

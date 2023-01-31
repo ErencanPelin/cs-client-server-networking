@@ -19,7 +19,7 @@ namespace Client.Net.IO
         public void WriteMessage(string message)
         {
             //default method
-            var cipherText = Encryption.EncryptDataWithAes(message, out var IV); //encrypt message
+            var cipherText = Encryption.EncryptDataWithAes(message, out var IV, Encoding.ASCII.GetBytes("b14ca5898a4e4133bbce2ea2315a1916")); //encrypt message
             ms.Write(BitConverter.GetBytes(cipherText.Length));
             ms.Write(IV); //attach the IV to the message so it can be decrypted
             ms.Write(Encoding.ASCII.GetBytes(cipherText));
