@@ -9,7 +9,6 @@ namespace Server
     {
         static TcpListener _tcpListener;
         static List<Client> users;
-        static KeyExchange keyExchange;
 
         static event Action<Client> onClientConnect; //invoked whenever a new client is connected
         static event Action<Client> onClientDisconnect; //invoked whenever a client disconnects
@@ -40,8 +39,6 @@ namespace Server
         {
             Console.Title = "Server";
             users = new List<Client>();
-
-            keyExchange = new KeyExchange(); //create a new pair of public/private keys for this session
         }
 
         //open client/server port

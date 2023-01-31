@@ -22,7 +22,7 @@ namespace Server.Net.IO
             var IV = iv;
             ns.Read(buffer, 0, length); //read the bytes for the message
             var cipherText = Encoding.ASCII.GetString(buffer); //read the string from the buffer
-            var plainText = Encryption.DecryptDataWithAes(cipherText, IV); //decrypt the data
+            var plainText = Encryption.DecryptDataWithAes(cipherText, IV, Encoding.ASCII.GetBytes("b14ca5898a4e4133bbce2ea2315a1916")); //decrypt the data
             return plainText; //output plain text data
         }
     }

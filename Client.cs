@@ -12,7 +12,6 @@ namespace Server
         public TcpClient client { get; set; }
         
         private PacketReader packetReader;
-        private byte[] clientPublicKey; //used to encrypt this clients data before its sent to them
 
         public Client(TcpClient client)
         {
